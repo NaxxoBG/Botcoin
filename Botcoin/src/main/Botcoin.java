@@ -1,5 +1,9 @@
 package main;
 
+import commands.CheckCoinCmd;
+import commands.ClearCmd;
+import de.btobastian.sdcf4j.CommandHandler;
+import de.btobastian.sdcf4j.handler.Discord4JHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 
@@ -19,6 +23,10 @@ public class Botcoin {
 		clientBuilder.setMaxReconnectAttempts(3);
 		clientBuilder.online();
 		this.client = clientBuilder.login();
+		CommandHandler cmdHandler = new CommandHandler() {};
+		cmdHandler.registerCommand(new CheckCoinCmd());
+		cmdHandler.registerCommand(new ClearCmd());
+		client.getDispatcher().registerListener(cmdHandler);
 	}
 
 	public static Botcoin getBotInstance() {
