@@ -44,8 +44,4 @@ public class Botcoin {
 	public IDiscordClient getClient() {
 		return client;
 	}
-
-//	public void setClient(IDiscordClient client) {
-//		this.client = client;
-//	}
 }
