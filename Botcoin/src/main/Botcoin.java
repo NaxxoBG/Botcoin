@@ -9,10 +9,10 @@ import sx.blah.discord.api.IDiscordClient;
 
 public class Botcoin {
 
-	private IDiscordClient client;
 	private static final String TOKEN = "Mzc2Njk4NTExNjgyNTY4MTk0.DOdsSA.ZTecU4669mbMYO3npXo-EoUIU4A";
-	private static Botcoin bot;
+	private IDiscordClient client;
 	private ClientBuilder builder;
+	private static Botcoin bot;
 
 	private Botcoin() {
 		createClient();
@@ -31,7 +31,6 @@ public class Botcoin {
 		CommandHandler cmdHandler = new Discord4JHandler(client);
 		cmdHandler.registerCommand(new CheckCoinCmd());
 		cmdHandler.registerCommand(new ClearCmd());
-		this.client.login();
 	}
 
 	public static Botcoin getBotInstance() {
