@@ -28,9 +28,9 @@ public class Botcoin {
 
 	public void activate() {
 		this.client = this.builder.login();
-		CommandHandler cmdHandler = new Discord4JHandler(client);
-		cmdHandler.registerCommand(new CheckCoinCmd());
-		cmdHandler.registerCommand(new ClearCmd());
+		CommandHandler handler = new Discord4JHandler(client);
+		handler.registerCommand(new CheckCoinCmd());
+		handler.registerCommand(new ClearCmd());
 	}
 
 	public static Botcoin getBotInstance() {
