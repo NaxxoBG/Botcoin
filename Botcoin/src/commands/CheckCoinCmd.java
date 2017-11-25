@@ -12,7 +12,7 @@ import de.btobastian.sdcf4j.CommandExecutor;
 import main.Botcoin;
 import main.CoinTicker;
 import sx.blah.discord.Discord4J;
-import sx.blah.discord.handle.impl.obj.Channel;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.EmbedBuilder;
 import sx.blah.discord.util.MessageBuilder;
@@ -22,7 +22,7 @@ import sx.blah.discord.util.RequestBuffer;
 public class CheckCoinCmd implements CommandExecutor {
 
 	@Command(aliases = {"$check"}, description = "Shows some information about the coin.", usage = "$check [coin] [currency]")
-	public void checkCoin(Channel channel, String[] args) {
+	public void checkCoin(IChannel channel, String[] args) {
 		RequestBuffer.request(() -> {
 			try {
 				String res = CoinTicker.checkCoinPrice(args[0], args[1]);
