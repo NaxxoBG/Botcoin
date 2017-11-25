@@ -26,7 +26,7 @@ public class CoinTicker implements Callable<String> {
 	private final String btcUrlString2 = "https://www.coingecko.com/coins/currency_exchange_rates.json";
 	private String ethUrlString = "https://ethereumprice.org/wp-content/themes/theme/inc/exchanges/price-data.php?coin=eth&cur=ethusd&ex=waex&dec=2&start_time=24%20Hour";
 	private String allAvCoins = "https://graphs.coinmarketcap.com/currencies/holder/";
-	private final String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.75 Safari/537.36";
+	private final String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36";
 	private final String btcDelimiter = "+---------+----------+\n";
 	private final String btcDelimiter2 = "+-------+----------+\n";
 	private final String ethDelimiter = "+-----------------+-----------+\n";

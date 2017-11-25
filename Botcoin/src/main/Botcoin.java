@@ -1,27 +1,36 @@
 package main;
 
+import commands.CheckCoinCmd;
+import commands.ClearCmd;
+import de.btobastian.sdcf4j.CommandHandler;
+import de.btobastian.sdcf4j.handler.Discord4JHandler;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.EventDispatcher;
 
 public class Botcoin {
-	public static Botcoin bot;
-	private IDiscordClient client;
-	private EventDispatcher dispatcher;
+
 	private static final String TOKEN = "Mzc2Njk4NTExNjgyNTY4MTk0.DOdsSA.ZTecU4669mbMYO3npXo-EoUIU4A";
+	private IDiscordClient client;
+	private ClientBuilder builder;
+	private static Botcoin bot;
 
 	private Botcoin() {
-		createAndLoginClient(TOKEN);
+		createClient();
 	}
 
-	private void createAndLoginClient(String token) {
-		ClientBuilder clientBuilder = new ClientBuilder();
-		clientBuilder.withToken(token);
-		clientBuilder.setMaxMessageCacheCount(250);
-		clientBuilder.setMaxReconnectAttempts(3);
-		clientBuilder.online();
-		this.client = clientBuilder.login();
-		this.dispatcher = client.getDispatcher();
+	private void createClient() {
+		builder = new ClientBuilder();
+		builder.withToken(TOKEN);
+		builder.setMaxMessageCacheCount(250);
+		builder.setMaxReconnectAttempts(3);
+		builder.online();
+	}
+
+	public void activate() {
+		this.client = this.builder.login();
+		CommandHandler handler = new Discord4JHandler(client);
+		handler.registerCommand(new CheckCoinCmd());
+		handler.registerCommand(new ClearCmd());
 	}
 
 	public static Botcoin getBotInstance() {
@@ -33,13 +42,5 @@ public class Botcoin {
 
 	public IDiscordClient getClient() {
 		return client;
-	}
-
-	public void setClient(IDiscordClient client) {
-		this.client = client;
-	}
-
-	public EventDispatcher getEvDispatcher() {
-		return this.dispatcher;
 	}
 }
