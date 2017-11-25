@@ -1,5 +1,6 @@
 package commands;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -26,10 +27,10 @@ public class CheckCoinCmd implements CommandExecutor {
 		RequestBuffer.request(() -> {
 			try {
 				String res = CoinTicker.checkCoinPrice(args[0], args[1]);
-				String imageUrl = "https://api.blockchain.info/charts/preview/market-price.png?lang=bg&h=810&w=1440";
+				String imageUrl = String.format("https://api.blockchain.info/charts/preview/market-price.png?lang=bg&end=%s&h=810&w=1440", Instant.now().getEpochSecond());
 				EmbedBuilder emBuild;
 
-				if (args[1].equalsIgnoreCase("bitcoin") || args[0].equalsIgnoreCase("btc")) {
+				if (args[0].equalsIgnoreCase("bitcoin") || args[0].equalsIgnoreCase("btc")) {
 					emBuild = new EmbedBuilder()
 							.withAuthorName("Bitcoin")
 							.withColor(ThreadLocalRandom.current().nextInt(188290, 16777216))
