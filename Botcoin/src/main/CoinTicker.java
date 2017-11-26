@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public class CoinTicker implements Callable<String>, ICoinTicker { 
+public class CoinTicker implements Callable<String> { 
 	private String currency;
 	private String coin;
 
@@ -33,16 +33,16 @@ public class CoinTicker implements Callable<String>, ICoinTicker {
 		case "BTC":
 		case "BITCOIN":
 			switch (url) {
-			case BTC_URL:
+			case CoinTickerConstants.BTC_URL:
 				return StringUtils.appendIfMissing(
 						StringUtils.prependIfMissing(
 								obj.getAsJsonObject("ticker").getAsJsonObject(currency).entrySet().parallelStream()
 								.map(e -> String.format("|%7.6s  | %9.7s|\n", e.getKey(), e.getValue()))
-								.collect(Collectors.joining()), BTC_DELIMITER), BTC_DELIMITER);
-			case BTC_URL_2:
+								.collect(Collectors.joining()), CoinTickerConstants.BTC_DELIMITER), CoinTickerConstants.BTC_DELIMITER);
+			case CoinTickerConstants.BTC_URL_2:
 				return StringUtils.appendIfMissing(
 						StringUtils.prependIfMissing(
-								String.format("|Price  |  %7.8s|\n", obj.getAsJsonObject("rates").get(currency.toLowerCase()).toString().replaceAll("\"", "")), BTC_DELIMITER_2), BTC_DELIMITER_2);
+								String.format("|Price  |  %7.8s|\n", obj.getAsJsonObject("rates").get(currency.toLowerCase()).toString().replaceAll("\"", "")), CoinTickerConstants.BTC_DELIMITER_2), CoinTickerConstants.BTC_DELIMITER_2);
 			default:
 				return null;
 			}
@@ -52,7 +52,7 @@ public class CoinTicker implements Callable<String>, ICoinTicker {
 					StringUtils.prependIfMissing(
 							obj.entrySet().parallelStream()
 							.map(e -> String.format("|%-15.15s  | %10.10s|\n", e.getKey(), e.getValue()))
-							.collect(Collectors.joining()), ETH_DELIMITER), ETH_DELIMITER);
+							.collect(Collectors.joining()), CoinTickerConstants.ETH_DELIMITER), CoinTickerConstants.ETH_DELIMITER);
 			if (result.contains("nan")) {
 				System.out.println("Try with another currency");
 				return "No info :(";
@@ -62,7 +62,7 @@ public class CoinTicker implements Callable<String>, ICoinTicker {
 		default:
 			return StringUtils.appendIfMissing(
 					StringUtils.prependIfMissing(
-							String.format("|%12.12s  | %9.7s|\n", coin, obj.getAsJsonArray("price_usd").get(obj.getAsJsonArray("price_usd").size()-1).getAsJsonArray().get(1).toString()), ALT_COINS_DELIMITER), ALT_COINS_DELIMITER);
+							String.format("|%12.12s  | %9.7s|\n", coin, obj.getAsJsonArray("price_usd").get(obj.getAsJsonArray("price_usd").size()-1).getAsJsonArray().get(1).toString()), CoinTickerConstants.ALT_COINS_DELIMITER), CoinTickerConstants.ALT_COINS_DELIMITER);
 		}
 	}
 
@@ -142,22 +142,22 @@ public class CoinTicker implements Callable<String>, ICoinTicker {
 			case "BTC":
 			case "BITCOIN":
 				this.currency = this.currency.toUpperCase();
-				conn = new URL(BTC_URL).openConnection();
+				conn = new URL(CoinTickerConstants.BTC_URL).openConnection();
 				try {
-					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), BTC_URL);
+					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), CoinTickerConstants.BTC_URL);
 				} catch (IOException e) {
 					System.out.println("Switching to another source...");
-					conn = new URL(BTC_URL_2).openConnection();
-					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), BTC_URL_2);
+					conn = new URL(CoinTickerConstants.BTC_URL_2).openConnection();
+					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), CoinTickerConstants.BTC_URL_2);
 				}
 			case "ETH":
 			case "ETHEREUM":
-				String url = ETH_URL;
+				String url = CoinTickerConstants.ETH_URL;
 				url = StringUtils.replace(url, "ethusd", "eth".concat(currency.toLowerCase()));
 				conn = new URL(url).openConnection();
 				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), url);
 			default:
-				String allAvUrl = ALT_COINS_URL;
+				String allAvUrl = CoinTickerConstants.ALT_COINS_URL;
 				allAvUrl = StringUtils.replace(allAvUrl, "holder", coin.toLowerCase());
 				conn = new URL(allAvUrl).openConnection();
 				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), allAvUrl);
@@ -168,8 +168,8 @@ public class CoinTicker implements Callable<String>, ICoinTicker {
 	}
 
 	private InputStream requestAndReturn(URLConnection conn) throws MalformedURLException, IOException {
-		conn.setRequestProperty("User-Agent", USER_AGENT);
-		conn.setConnectTimeout(TIMEOUT);
+		conn.setRequestProperty("User-Agent", CoinTickerConstants.USER_AGENT);
+		conn.setConnectTimeout(CoinTickerConstants.TIMEOUT);
 		return conn.getInputStream();
 	}
 }
