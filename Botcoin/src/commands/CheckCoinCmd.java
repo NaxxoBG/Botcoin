@@ -38,7 +38,7 @@ public class CheckCoinCmd implements CommandExecutor {
 							.withImage(imageUrl)
 							.appendField("Let's see how much you lost", "...and the moment of truth   😱", false)
 							.appendField("Information", String.format("```\n%s```", res), false)
-							.withThumbnail(String.format("https://files.coinmarketcap.com/static/img/coins/32x32/%s.png", "bitcoin"))
+							.withThumbnail("https://files.coinmarketcap.com/static/img/coins/32x32/bitcoin.png")
 							.withTimestamp(LocalDateTime.now())
 							.withFooterText("⏰");
 				} else {

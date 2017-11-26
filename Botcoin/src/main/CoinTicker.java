@@ -18,19 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public class CoinTicker implements Callable<String> {
-	private final short TIMEOUT = 600;
+public class CoinTicker implements Callable<String>, ICoinTicker {
+	private static final short TIMEOUT = 600;
 	private String currency;
 	private String coin;
-	private final String btcUrlString = "https://realtimebitcoin.info/stats";
-	private final String btcUrlString2 = "https://www.coingecko.com/coins/currency_exchange_rates.json";
-	private String ethUrlString = "https://ethereumprice.org/wp-content/themes/theme/inc/exchanges/price-data.php?coin=eth&cur=ethusd&ex=waex&dec=2&start_time=24%20Hour";
-	private String allAvCoins = "https://graphs.coinmarketcap.com/currencies/holder/";
-	private final String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36";
-	private final String btcDelimiter = "+---------+----------+\n";
-	private final String btcDelimiter2 = "+-------+----------+\n";
-	private final String ethDelimiter = "+-----------------+-----------+\n";
-	private final String allOthCoinsDelimiter = "+--------------+----------+\n";
 
 	private CoinTicker(String coin, String currency) {
 		this.coin = coin;
@@ -43,21 +34,26 @@ public class CoinTicker implements Callable<String> {
 		case "BTC":
 		case "BITCOIN":
 			switch (url) {
-			case btcUrlString:
-				return StringUtils.appendIfMissing(StringUtils.prependIfMissing(obj.getAsJsonObject("ticker").getAsJsonObject(currency).entrySet().parallelStream()
-						.map(e -> String.format("|%7.6s  | %9.7s|\n", e.getKey(), e.getValue()))
-						.collect(Collectors.joining()), btcDelimiter), btcDelimiter);
-			case btcUrlString2:
+			case BTC_URL:
 				return StringUtils.appendIfMissing(
-						StringUtils.prependIfMissing(String.format("|Price  |  %7.8s|\n", obj.getAsJsonObject("rates").get(currency.toLowerCase()).toString().replaceAll("\"", "")), btcDelimiter2), btcDelimiter2);
+						StringUtils.prependIfMissing(
+								obj.getAsJsonObject("ticker").getAsJsonObject(currency).entrySet().parallelStream()
+								.map(e -> String.format("|%7.6s  | %9.7s|\n", e.getKey(), e.getValue()))
+								.collect(Collectors.joining()), BTC_DELIMITER), BTC_DELIMITER);
+			case BTC_URL_2:
+				return StringUtils.appendIfMissing(
+						StringUtils.prependIfMissing(
+								String.format("|Price  |  %7.8s|\n", obj.getAsJsonObject("rates").get(currency.toLowerCase()).toString().replaceAll("\"", "")), BTC_DELIMITER_2), BTC_DELIMITER_2);
 			default:
 				return null;
 			}
 		case "ETH":
 		case "ETHEREUM":
-			String result = StringUtils.appendIfMissing(StringUtils.prependIfMissing(obj.entrySet().parallelStream()
-					.map(e -> String.format("|%-15.15s  | %10.10s|\n", e.getKey(), e.getValue()))
-					.collect(Collectors.joining()), ethDelimiter), ethDelimiter);
+			String result = StringUtils.appendIfMissing(
+					StringUtils.prependIfMissing(
+							obj.entrySet().parallelStream()
+							.map(e -> String.format("|%-15.15s  | %10.10s|\n", e.getKey(), e.getValue()))
+							.collect(Collectors.joining()), ETH_DELIMITER), ETH_DELIMITER);
 			if (result.contains("nan")) {
 				System.out.println("Try with another currency");
 				return "No info :(";
@@ -65,7 +61,9 @@ public class CoinTicker implements Callable<String> {
 				return result;
 			}
 		default:
-			return StringUtils.appendIfMissing(StringUtils.prependIfMissing(String.format("|%12.12s  | %9.7s|\n", coin, obj.getAsJsonArray("price_usd").get(obj.getAsJsonArray("price_usd").size()-1).getAsJsonArray().get(1).toString()), allOthCoinsDelimiter), allOthCoinsDelimiter);
+			return StringUtils.appendIfMissing(
+					StringUtils.prependIfMissing(
+							String.format("|%12.12s  | %9.7s|\n", coin, obj.getAsJsonArray("price_usd").get(obj.getAsJsonArray("price_usd").size()-1).getAsJsonArray().get(1).toString()), ALT_COINS_DELIMITER), ALT_COINS_DELIMITER);
 		}
 	}
 
@@ -145,23 +143,25 @@ public class CoinTicker implements Callable<String> {
 			case "BTC":
 			case "BITCOIN":
 				this.currency = this.currency.toUpperCase();
-				conn = new URL(btcUrlString).openConnection();
+				conn = new URL(BTC_URL).openConnection();
 				try {
-					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), btcUrlString);
+					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), BTC_URL);
 				} catch (IOException e) {
 					System.out.println("Switching to another source...");
-					conn = new URL(btcUrlString2).openConnection();
-					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), btcUrlString2);
+					conn = new URL(BTC_URL_2).openConnection();
+					return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), BTC_URL_2);
 				}
 			case "ETH":
 			case "ETHEREUM":
-				ethUrlString = StringUtils.replace(ethUrlString, "ethusd", "eth".concat(currency.toLowerCase()));
-				conn = new URL(ethUrlString).openConnection();
-				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), ethUrlString);
+				String url = ETH_URL;
+				url = StringUtils.replace(url, "ethusd", "eth".concat(currency.toLowerCase()));
+				conn = new URL(url).openConnection();
+				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), url);
 			default:
-				allAvCoins = StringUtils.replace(allAvCoins, "holder", coin.toLowerCase());
-				conn = new URL(allAvCoins).openConnection();
-				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), allAvCoins);
+				String allAvUrl = ALT_COINS_URL;
+				allAvUrl = StringUtils.replace(allAvUrl, "holder", coin.toLowerCase());
+				conn = new URL(allAvUrl).openConnection();
+				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), allAvUrl);
 			}
 		} catch (IOException | NullPointerException e) {
 			return "The currency you have entered is not available :(";
@@ -169,7 +169,7 @@ public class CoinTicker implements Callable<String> {
 	}
 
 	private InputStream requestAndReturn(URLConnection conn) throws MalformedURLException, IOException {
-		conn.setRequestProperty("User-Agent", userAgent);
+		conn.setRequestProperty("User-Agent", USER_AGENT);
 		conn.setConnectTimeout(TIMEOUT);
 		return conn.getInputStream();
 	}
