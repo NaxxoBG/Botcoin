@@ -18,8 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-public class CoinTicker implements Callable<String>, ICoinTicker {
-	private static final short TIMEOUT = 600;
+public class CoinTicker implements Callable<String>, ICoinTicker { 
 	private String currency;
 	private String coin;
 
