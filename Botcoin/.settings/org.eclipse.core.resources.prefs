@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/commands/CheckCoinCmd.java=UTF-8
+encoding//src/commands/HelpCmd.java=UTF-8
 encoding//src/main/AnnotationListeners.java=UTF-8
 encoding//src/test/CoinCheckerTests.java=UTF-8

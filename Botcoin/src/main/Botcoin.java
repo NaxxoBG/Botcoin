@@ -2,6 +2,7 @@ package main;
 
 import commands.CheckCoinCmd;
 import commands.ClearCmd;
+import commands.HelpCmd;
 import de.btobastian.sdcf4j.CommandHandler;
 import de.btobastian.sdcf4j.handler.Discord4JHandler;
 import sx.blah.discord.api.ClientBuilder;
@@ -31,6 +32,7 @@ public class Botcoin {
 		CommandHandler handler = new Discord4JHandler(client);
 		handler.registerCommand(new CheckCoinCmd());
 		handler.registerCommand(new ClearCmd());
+		handler.registerCommand(new HelpCmd());
 	}
 
 	public static Botcoin getBotInstance() {
