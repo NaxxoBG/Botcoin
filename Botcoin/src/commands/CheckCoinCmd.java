@@ -22,7 +22,7 @@ import sx.blah.discord.util.RequestBuffer;
 
 public class CheckCoinCmd implements CommandExecutor {
 
-	@Command(aliases = {"$check"}, description = "Shows some information about the coin.", usage = "$check [coin] [currency]")
+	@Command(aliases = {"$check"}, description = "Shows you information about the specified coin in that currency.", usage = "$check [coin] [currency]")
 	public void checkCoin(IChannel channel, String[] args) {
 		RequestBuffer.request(() -> {
 			try {
@@ -36,7 +36,7 @@ public class CheckCoinCmd implements CommandExecutor {
 							.withColor(ThreadLocalRandom.current().nextInt(188290, 16777216))
 							.withDescription("The market price in " + args[1].toUpperCase())
 							.withImage(imageUrl)
-							.appendField("Let's see how much you lost", "...and the moment of truth   😱", false)
+							.appendField("Let's see how much you have earned", "...and the moment of truth   😱", false)
 							.appendField("Information", String.format("```\n%s```", res), false)
 							.withThumbnail("https://files.coinmarketcap.com/static/img/coins/32x32/bitcoin.png")
 							.withTimestamp(LocalDateTime.now())
