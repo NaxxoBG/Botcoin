@@ -11,7 +11,7 @@ import sx.blah.discord.util.RequestBuffer;
 
 public class ClearCmd implements CommandExecutor {
 
-	@Command(aliases = {"$clear"}, description = "Clears the bot's messages", usage = "$clear")
+	@Command(aliases = {"$clear"}, description = "clears all previous messages of the bot.", usage = "$clear")
 	public void clearBotMessages(IChannel channel, IMessage message) {
 		RequestBuffer.request(() -> {
 			new MessageHistory(channel.getMessageHistoryFrom(message.getLongID())

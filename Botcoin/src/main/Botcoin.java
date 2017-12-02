@@ -13,6 +13,7 @@ public class Botcoin {
 	private static final String TOKEN = "Mzc2Njk4NTExNjgyNTY4MTk0.DOdsSA.ZTecU4669mbMYO3npXo-EoUIU4A";
 	private IDiscordClient client;
 	private ClientBuilder builder;
+	private CommandHandler handler;
 	private static Botcoin bot;
 
 	private Botcoin() {
@@ -29,7 +30,7 @@ public class Botcoin {
 
 	public void activate() {
 		this.client = this.builder.login();
-		CommandHandler handler = new Discord4JHandler(client);
+		handler = new Discord4JHandler(client);
 		handler.registerCommand(new CheckCoinCmd());
 		handler.registerCommand(new ClearCmd());
 		handler.registerCommand(new HelpCmd());
@@ -44,5 +45,9 @@ public class Botcoin {
 
 	public IDiscordClient getClient() {
 		return client;
+	}
+	
+	public CommandHandler getCommandHandler() {
+		return handler;
 	}
 }
