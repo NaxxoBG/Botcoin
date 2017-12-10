@@ -19,6 +19,10 @@ import sx.blah.discord.util.MessageHistory;
 import sx.blah.discord.util.MissingPermissionsException;
 import sx.blah.discord.util.RequestBuffer;
 
+/**This class was the previous implementation of the bot commands. The approach used here(using the EventSubscriber annotation) proved
+ * to be not that good structure-wise. Also maintainability was something that this structure would hinder if newer commands are added.
+ * @author Naxxo
+ */
 public class AnnotationListeners
 {
 	private static Botcoin bot = Botcoin.getBotInstance();
