@@ -50,7 +50,7 @@ public class CoinTicker implements Callable<String> {
 		case "ETHEREUM":
 			String result = StringUtils.appendIfMissing(
 					StringUtils.prependIfMissing(
-							obj.entrySet().parallelStream()
+							obj.getAsJsonObject("ticker").entrySet().parallelStream()
 							.map(e -> String.format("|%-15.15s  | %10.10s|\n", e.getKey(), e.getValue()))
 							.collect(Collectors.joining()), CoinTickerConstants.ETH_DELIMITER), CoinTickerConstants.ETH_DELIMITER);
 			if (result.contains("nan")) {
@@ -62,7 +62,9 @@ public class CoinTicker implements Callable<String> {
 		default:
 			return StringUtils.appendIfMissing(
 					StringUtils.prependIfMissing(
-							String.format("|%12.12s  | %9.7s|\n", coin, obj.getAsJsonArray("price_usd").get(obj.getAsJsonArray("price_usd").size()-1).getAsJsonArray().get(1).toString()), CoinTickerConstants.ALT_COINS_DELIMITER), CoinTickerConstants.ALT_COINS_DELIMITER);
+							obj.getAsJsonObject("ticker").entrySet().parallelStream()
+							.map(e -> String.format("|%12.12s  | %9.7s|\n", e.getKey(), e.getValue()))
+							.collect(Collectors.joining()), CoinTickerConstants.ALT_COINS_DELIMITER), CoinTickerConstants.ALT_COINS_DELIMITER);
 		}
 	}
 
@@ -153,11 +155,12 @@ public class CoinTicker implements Callable<String> {
 			case "ETH":
 			case "ETHEREUM":
 				String url = CoinTickerConstants.ETH_URL;
-				url = StringUtils.replace(url, "ethusd", "eth".concat(currency.toLowerCase()));
+				url = StringUtils.replace(url, "ethusd", "eth".concat("-"+currency.toLowerCase()));
 				conn = new URL(url).openConnection();
 				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), url);
 			default:
 				String allAvUrl = CoinTickerConstants.ALT_COINS_URL;
+				this.coin = this.coin.matches("(?i)(monero|mon)") ? "xmr": this.coin;
 				allAvUrl = StringUtils.replace(allAvUrl, "holder", coin.toLowerCase());
 				conn = new URL(allAvUrl).openConnection();
 				return processGsonResult(IOUtils.toString(requestAndReturn(conn), "UTF-8"), allAvUrl);

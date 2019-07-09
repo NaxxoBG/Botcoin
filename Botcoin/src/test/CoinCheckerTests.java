@@ -17,23 +17,33 @@ import main.CoinTicker;
 public class CoinCheckerTests extends TestCase {
 
 	public void testBtc() throws InterruptedException, ExecutionException, TimeoutException {
-		System.out.println(CoinTicker.checkCoinPrice("btc", "usd"));
+		String res = CoinTicker.checkCoinPrice("btc", "usd");
+		assertEquals(false, res.contains("error"));
+		System.out.println(res);
 	}
 
 	public void testDash() throws InterruptedException, ExecutionException, TimeoutException {
-		System.out.println(CoinTicker.checkCoinPrice("dash", "usd"));
+		String res = CoinTicker.checkCoinPrice("dash", "usd");
+		assertEquals(false, res.contains("error"));
+		System.out.println(res);
 	}
 
 	public void testEth() throws InterruptedException, ExecutionException, TimeoutException {
-		System.out.println(CoinTicker.checkCoinPrice("eth", "cad"));
+		String res = CoinTicker.checkCoinPrice("eth", "cad");
+		assertEquals(false, res.contains("error"));
+		System.out.println(res);
 	}
 
 	public void testMonero() throws InterruptedException, ExecutionException, TimeoutException {
-		System.out.println(CoinTicker.checkCoinPrice("monero", "eur"));
+		String res = CoinTicker.checkCoinPrice("monero", "eur");
+		assertEquals(false, res.contains("error"));
+		System.out.println(res);
 	}
 
 	public void testNeo() throws InterruptedException, ExecutionException, TimeoutException {
-		System.out.println(CoinTicker.checkCoinPrice("neo", "jpy"));
+		String res = CoinTicker.checkCoinPrice("neo", "jpy");
+		assertEquals(false, res.contains("error"));
+		System.out.println(res);
 	}
 
 	public void testHttpClient() {
